@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TaskMate</title>
+</head>
+<body>
+<h1>Welcome to TaskMate</h1>
+
+<form th:action="@{/add}" th:object="${task}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    <input type="text" th:field="*{title}" placeholder="Enter a task" required />
+    <button type="submit" th:text="${task.id} != null ? 'Update' : 'Add'"></button>
+</form>
+
+<hr/>
+
+<ul>
+    <li th:if="${#lists.isEmpty(tasks)}">No tasks yet. Add some!</li>
+    <li th:each="task : ${tasks}">
+        <form th:action="@{'/toggle/' + ${task.id}}" method="post" style="display:inline;">
+            <input type="checkbox" th:checked="${task.completed}" onchange="this.form.submit()" />
+        </form>
+
+        <span th:text="${task.title}" th:style="${task.completed} ? 'text-decoration: line-through' : ''"></span>
+
+        <a th:href="@{'/edit/' + ${task.id}}">Edit</a>
+        <form th:action="@{'/delete/' + ${task.id}}" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+</body>
+</html>
